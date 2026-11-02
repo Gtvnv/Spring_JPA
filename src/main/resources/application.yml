@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: academia-api
+
+  # Configuracao do Banco de Dados (H2 em memoria)
+  datasource:
+    url: jdbc:h2:mem:academia;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # Console web do H2 disponivel em http://localhost:8080/h2-console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # Configuracao do JPA / Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # create-drop recria o schema a cada inicializacao (ideal para estudo)
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    # Executa o import.sql / data.sql apos a criacao do schema
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+# Documentacao da API (springdoc-openapi / Swagger)
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs

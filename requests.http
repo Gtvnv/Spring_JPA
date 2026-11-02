@@ -1,0 +1,105 @@
+### Arquivo de requisicoes HTTP para testar a API da Academia
+### Use com a extensao "REST Client" do VS Code ou o cliente HTTP da IntelliJ.
+### Inicie a aplicacao antes: ./mvnw spring-boot:run
+
+@host = http://localhost:8080
+
+### ---------- ALUNOS ----------
+
+### Listar todos os alunos
+GET {{host}}/api/alunos
+
+### Buscar aluno por id
+GET {{host}}/api/alunos/1
+
+### Buscar alunos por trecho do nome
+GET {{host}}/api/alunos?nome=silva
+
+### Listar apenas alunos com matricula ativa (consulta JPQL)
+GET {{host}}/api/alunos?ativos=true
+
+### Criar aluno (201 Created)
+POST {{host}}/api/alunos
+Content-Type: application/json
+
+{
+  "nome": "Pedro Santos",
+  "email": "pedro@email.com",
+  "cpf": "333.333.333-33",
+  "dataNascimento": "2000-05-20",
+  "endereco": {
+    "cep": "30110-000",
+    "logradouro": "Av. Afonso Pena",
+    "cidade": "Belo Horizonte",
+    "uf": "MG"
+  }
+}
+
+### Criar aluno invalido (400 Bad Request - validacao)
+POST {{host}}/api/alunos
+Content-Type: application/json
+
+{
+  "nome": "",
+  "email": "nao-eh-email",
+  "cpf": "",
+  "dataNascimento": "2999-01-01"
+}
+
+### Criar aluno com e-mail duplicado (409 Conflict - regra de negocio)
+POST {{host}}/api/alunos
+Content-Type: application/json
+
+{
+  "nome": "Outro Joao",
+  "email": "joao@email.com",
+  "cpf": "999.999.999-99",
+  "dataNascimento": "1990-01-01"
+}
+
+### Atualizar aluno
+PUT {{host}}/api/alunos/1
+Content-Type: application/json
+
+{
+  "nome": "Joao da Silva Jr",
+  "email": "joao@email.com",
+  "cpf": "111.111.111-11",
+  "dataNascimento": "1995-04-12",
+  "endereco": {
+    "cep": "01001-000",
+    "logradouro": "Praca da Se, 100",
+    "cidade": "Sao Paulo",
+    "uf": "SP"
+  }
+}
+
+### Excluir aluno (204 No Content)
+DELETE {{host}}/api/alunos/1
+
+### ---------- MATRICULAS ----------
+
+### Listar todas as matriculas
+GET {{host}}/api/matriculas
+
+### Listar matriculas de um aluno
+GET {{host}}/api/matriculas?alunoId=1
+
+### Relatorio: quantidade de matriculas por plano (JPQL GROUP BY)
+GET {{host}}/api/matriculas/relatorio/por-plano
+
+### Matricular aluno em um plano (201 Created)
+POST {{host}}/api/matriculas
+Content-Type: application/json
+
+{
+  "alunoId": 3,
+  "planoId": 2,
+  "dataInicio": "2026-11-02"
+}
+
+### Alterar status da matricula
+PATCH {{host}}/api/matriculas/1/status?status=SUSPENSA
+
+### Cancelar (excluir) matricula
+DELETE {{host}}/api/matriculas/1
